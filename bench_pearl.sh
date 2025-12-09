@@ -1,4 +1,4 @@
-python bench.py \
+nohup python bench.py \
   --draft-model "/home/models/Qwen/Qwen3-1.7B-FP8" \
   --target-model "/home/models/Qwen/Qwen3-32B-FP8" \
   --draft-tp 1 \
@@ -7,4 +7,5 @@ python bench.py \
   --temperature 0 \
   --run-ar-benchmark -v \
   --max-tokens 1536 \
- --ignore-eos
+ --ignore-eos \
+ > nano_pearl.log 2>&1 &
