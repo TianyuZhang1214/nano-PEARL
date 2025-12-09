@@ -55,6 +55,10 @@ def parse_args():
     parser.add_argument('--warmup-iters', type=int, default=1,
                        help='Warmup iterations before evaluation (default: 1, set 0 to disable)')
     
+    # Input processing arguments
+    parser.add_argument('--input-length', type=int, default=None,
+                       help='Fixed input length for prompts (truncate or pad to this length)')
+    
     # Other arguments
     parser.add_argument('--seed', type=int, default=0,
                        help='Random seed (default: 0)')
@@ -79,12 +83,38 @@ def load_jsonl_data(file_path: str, max_samples: Optional[int] = None) -> List[D
     return data
 
 
-def extract_prompts(data: List[Dict[str, Any]], dataset_name: str) -> List[str]:
-    """Extract prompts from data"""
+def process_prompt_length(prompt: str, target_length: int) -> str:
+    """Process prompt to target length by truncation or padding"""
+    if target_length is None:
+        return prompt
+    
+    # Convert to tokens (simple character-based approach for now)
+    # In real implementation, you might want to use tokenizer
+    prompt_length = len(prompt)
+    
+    if prompt_length > target_length:
+        # Truncate from the end
+        return prompt[:target_length]
+    elif prompt_length < target_length:
+        # Pad with spaces at the beginning
+        padding_length = target_length - prompt_length
+        return ' ' * padding_length + prompt
+    else:
+        return prompt
+
+
+def extract_prompts(data: List[Dict[str, Any]], dataset_name: str, input_length: Optional[int] = None) -> List[str]:
+    """Extract prompts from data with optional length processing"""
     prompts = []
     for item in data:
         prompt = item.get('turns', [''])[0] if item.get('turns') else ''
-        prompts.append(prompt.strip())
+        prompt = prompt.strip()
+        
+        # Apply length processing if specified
+        if input_length is not None:
+            prompt = process_prompt_length(prompt, input_length)
+            
+        prompts.append(prompt)
     return prompts
 
 
@@ -240,7 +270,10 @@ def main():
         # Load data
         logger.info(f"Loading {dataset_name} dataset...")
         data = load_jsonl_data(data_file, args.max_samples)
-        prompts = extract_prompts(data, dataset_name)
+        prompts = extract_prompts(data, dataset_name, args.input_length)
+        
+        if args.input_length:
+            logger.info(f"Applied input length processing: {args.input_length} characters")
         
         if not prompts:
             logger.warning(f"{dataset_name} dataset has no valid prompts, skipping")
