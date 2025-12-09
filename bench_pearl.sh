@@ -1,6 +1,6 @@
 nohup python bench.py \
-  --draft-model "/home/models/Qwen/Qwen3-1.7B-FP8" \
-  --target-model "/home/models/Qwen/Qwen3-32B-FP8" \
+  --draft-model "/home/models/Qwen/Qwen3-1.7B" \
+  --target-model "/home/models/Qwen/Qwen3-32B" \
   --draft-tp 1 \
   --target-tp 2 \
   --max-tokens 200 \
