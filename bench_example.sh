@@ -3,11 +3,11 @@ DRAFT_TP=1
 TARGET_TP=2
 GPU_MEMORY_UTILIZATION=0.95
 TEMPERATURE=0.0
-MAX_TOKENS=200
+MAX_TOKENS=1536
 IGNORE_EOS=true
-NUM_SAMPLES=100
+NUM_SAMPLES=128
 INPUT_LEN=1024
-BATCH_SIZE=1
+BATCH_SIZE=32
 RUN_AR_BENCHMARK=true
 SEED=0
 VERBOSE=false
@@ -25,6 +25,8 @@ export PYTHONWARNINGS=ignore
 export TRANSFORMERS_VERBOSITY=error
 
 if [ "$mode" = "benchmark" ]; then
+NVSHEM_DEBUG=WARN \
+NCCL_DEBUG=WARN \
 python benchmark/eval_benchmark.py \
     --draft-model "$draft_model" \
     --target-model "$target_model" \
