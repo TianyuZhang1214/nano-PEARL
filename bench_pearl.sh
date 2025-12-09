@@ -5,4 +5,6 @@ python bench.py \
   --target-tp 2 \
   --max-tokens 200 \
   --temperature 0 \
-  --run-ar-benchmark -v
+  --run-ar-benchmark -v \
+  --max-tokens 1536 \
+ --ignore-eos
