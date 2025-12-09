@@ -15,8 +15,8 @@ VERBOSE=false
 # Dataset options
 DATASET="all"  # Options: HumanEval, CNNDM, AIME, GSM8K, all
 
-draft_model=$1
-target_model=$2
+draft_model="/home/models/Qwen/Qwen3-1.7B"
+target_model="/home/models/Qwen/Qwen3-32B"
 dataset=${3:-$DATASET}
 mode=${4:-"benchmark"}
 
